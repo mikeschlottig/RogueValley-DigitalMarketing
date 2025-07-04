@@ -1,0 +1,1335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SEMrush Mastery Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .dashboard-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .main-nav {
+            background: rgba(255,255,255,0.95);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .nav-tab {
+            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .nav-tab:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
+
+        .nav-tab.active {
+            background: linear-gradient(45deg, #2ecc71, #27ae60);
+            transform: translateY(-2px);
+        }
+
+        .content-section {
+            display: none;
+            background: rgba(255,255,255,0.95);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .content-section.active {
+            display: block;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .feature-card {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+        }
+
+        .feature-card h3 {
+            font-size: 1.5em;
+            margin-bottom: 10px;
+        }
+
+        .feature-card p {
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+
+        .semrush-simulator {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            border: 2px solid #e9ecef;
+        }
+
+        .simulator-header {
+            background: #ff6900;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .simulator-nav {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .simulator-nav-item {
+            background: #fff;
+            border: 1px solid #ddd;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .simulator-nav-item:hover {
+            background: #ff6900;
+            color: white;
+        }
+
+        .simulator-nav-item.active {
+            background: #ff6900;
+            color: white;
+        }
+
+        .tutorial-steps {
+            background: #e3f2fd;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .step {
+            background: white;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border-left: 4px solid #2196f3;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .step:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transform: translateX(5px);
+        }
+
+        .step.completed {
+            border-left-color: #4caf50;
+            background: #f1f8e9;
+        }
+
+        .step-number {
+            background: #2196f3;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 15px;
+        }
+
+        .step.completed .step-number {
+            background: #4caf50;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background: #e0e0e0;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4caf50, #8bc34a);
+            transition: width 0.5s ease;
+            border-radius: 10px;
+        }
+
+        .interactive-demo {
+            background: #fff3e0;
+            border: 2px solid #ff9800;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .demo-button {
+            background: #ff9800;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            margin: 5px;
+        }
+
+        .demo-button:hover {
+            background: #f57c00;
+            transform: translateY(-2px);
+        }
+
+        .keyword-research-simulator {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .search-bar {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+
+        .result-card {
+            background: rgba(255,255,255,0.1);
+            padding: 15px;
+            border-radius: 8px;
+            backdrop-filter: blur(5px);
+        }
+
+        .metric-box {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            margin: 10px 0;
+            border: 1px solid #e9ecef;
+        }
+
+        .metric-value {
+            font-size: 2em;
+            font-weight: bold;
+            color: #2196f3;
+        }
+
+        .metric-label {
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        .checklist {
+            background: #f1f8e9;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .checklist-item {
+            display: flex;
+            align-items: center;
+            margin: 10px 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .checklist-item:hover {
+            background: rgba(76, 175, 80, 0.1);
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .checkbox {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #4caf50;
+            border-radius: 3px;
+            margin-right: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .checkbox.checked {
+            background: #4caf50;
+            position: relative;
+        }
+
+        .checkbox.checked::after {
+            content: '✓';
+            color: white;
+            position: absolute;
+            top: -2px;
+            left: 3px;
+            font-weight: bold;
+        }
+
+        .tip-box {
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border-left: 4px solid #ff9800;
+        }
+
+        .tip-box h4 {
+            color: #e65100;
+            margin-bottom: 10px;
+        }
+
+        .workflow-diagram {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .workflow-step {
+            display: inline-block;
+            background: #2196f3;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 25px;
+            margin: 10px;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .workflow-step:hover {
+            background: #1976d2;
+            transform: scale(1.05);
+        }
+
+        .workflow-step.completed {
+            background: #4caf50;
+        }
+
+        .workflow-arrow {
+            font-size: 2em;
+            color: #666;
+            margin: 0 10px;
+        }
+
+        .case-study {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            padding: 25px;
+            border-radius: 15px;
+            margin: 20px 0;
+        }
+
+        .case-study h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+
+        .before-after {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .before-after > div {
+            background: rgba(255,255,255,0.7);
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .before-after .before {
+            border-left: 4px solid #e74c3c;
+        }
+
+        .before-after .after {
+            border-left: 4px solid #27ae60;
+        }
+
+        .badge {
+            background: #ff6b6b;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.8em;
+            font-weight: bold;
+            margin: 0 5px;
+        }
+
+        .badge.pro {
+            background: #f39c12;
+        }
+
+        .badge.expert {
+            background: #8e44ad;
+        }
+
+        @media (max-width: 768px) {
+            .nav-tabs {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .nav-tab {
+                width: 100%;
+                max-width: 300px;
+            }
+            
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .before-after {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <div class="header">
+            <h1>🚀 SEMrush Mastery Dashboard</h1>
+            <p>Complete Interactive Training System for SEMrush Platform Excellence</p>
+        </div>
+
+        <div class="main-nav">
+            <div class="nav-tabs">
+                <button class="nav-tab active" data-section="overview">Platform Overview</button>
+                <button class="nav-tab" data-section="navigation">Navigation Guide</button>
+                <button class="nav-tab" data-section="keyword-research">Keyword Research</button>
+                <button class="nav-tab" data-section="competitor-analysis">Competitor Analysis</button>
+                <button class="nav-tab" data-section="site-audit">Site Audit</button>
+                <button class="nav-tab" data-section="backlink-analysis">Backlink Analysis</button>
+                <button class="nav-tab" data-section="content-gap">Content Gap Analysis</button>
+                <button class="nav-tab" data-section="rank-tracking">Rank Tracking</button>
+                <button class="nav-tab" data-section="case-studies">Case Studies</button>
+            </div>
+        </div>
+
+        <!-- Overview Section -->
+        <div class="content-section active" id="overview">
+            <h2>🎯 SEMrush Platform Overview</h2>
+            <p>Welcome to your comprehensive SEMrush training dashboard! This interactive guide will transform you from a beginner to a SEMrush expert through hands-on learning and practical exercises.</p>
+            
+            <div class="feature-grid">
+                <div class="feature-card" onclick="showSection('keyword-research')">
+                    <h3>🔍 Keyword Research</h3>
+                    <p>Master keyword discovery, volume analysis, and difficulty assessment to find high-value opportunities.</p>
+                </div>
+                <div class="feature-card" onclick="showSection('competitor-analysis')">
+                    <h3>👥 Competitor Analysis</h3>
+                    <p>Uncover competitor strategies, keyword gaps, and backlink opportunities to stay ahead.</p>
+                </div>
+                <div class="feature-card" onclick="showSection('site-audit')">
+                    <h3>🔧 Site Audit</h3>
+                    <p>Identify technical SEO issues and get actionable recommendations for improvement.</p>
+                </div>
+                <div class="feature-card" onclick="showSection('backlink-analysis')">
+                    <h3>🔗 Backlink Analysis</h3>
+                    <p>Analyze your backlink profile and discover new link building opportunities.</p>
+                </div>
+            </div>
+
+            <div class="tip-box">
+                <h4>💡 Getting Started Tip</h4>
+                <p>Begin with the Navigation Guide to familiarize yourself with SEMrush's interface, then progress through each section systematically. Each module builds upon the previous one for comprehensive mastery.</p>
+            </div>
+
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: 10%"></div>
+            </div>
+            <p><strong>Overall Progress: 10%</strong> - Let's begin your SEMrush mastery journey!</p>
+        </div>
+
+        <!-- Navigation Guide Section -->
+        <div class="content-section" id="navigation">
+            <h2>🧭 SEMrush Navigation Guide</h2>
+            
+            <div class="semrush-simulator">
+                <div class="simulator-header">
+                    SEMrush Dashboard Simulator
+                </div>
+                <div class="simulator-nav">
+                    <div class="simulator-nav-item active" onclick="highlightNavItem(this, 'dashboard')">Dashboard</div>
+                    <div class="simulator-nav-item" onclick="highlightNavItem(this, 'keyword-analytics')">Keyword Analytics</div>
+                    <div class="simulator-nav-item" onclick="highlightNavItem(this, 'domain-analytics')">Domain Analytics</div>
+                    <div class="simulator-nav-item" onclick="highlightNavItem(this, 'competitive-research')">Competitive Research</div>
+                    <div class="simulator-nav-item" onclick="highlightNavItem(this, 'link-building')">Link Building</div>
+                    <div class="simulator-nav-item" onclick="highlightNavItem(this, 'projects')">Projects</div>
+                </div>
+                <div id="nav-content">
+                    <div class="metric-box">
+                        <div class="metric-value">Dashboard</div>
+                        <div class="metric-label">Your SEMrush home base with overview metrics and quick access to all tools</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tutorial-steps">
+                <h3>📚 Navigation Mastery Steps</h3>
+                <div class="step" onclick="completeStep(this)">
+                    <span class="step-number">1</span>
+                    <strong>Dashboard Overview:</strong> Understand your main dashboard metrics and navigation structure
+                </div>
+                <div class="step" onclick="completeStep(this)">
+                    <span class="step-number">2</span>
+                    <strong>Tool Categories:</strong> Learn the six main tool categories and their purposes
+                </div>
+                <div class="step" onclick="completeStep(this)">
+                    <span class="step-number">3</span>
+                    <strong>Search Functionality:</strong> Master the universal search bar for domains and keywords
+                </div>
+                <div class="step" onclick="completeStep(this)">
+                    <span class="step-number">4</span>
+                    <strong>Project Setup:</strong> Create and organize your first SEMrush project
+                </div>
+                <div class="step" onclick="completeStep(this)">
+                    <span class="step-number">5</span>
+                    <strong>Reports & Exports:</strong> Generate and customize your first report
+                </div>
+            </div>
+
+            <div class="checklist">
+                <h4>✅ Navigation Checklist</h4>
+                <div class="checklist-item" onclick="toggleCheckbox(this)">
+                    <div class="checkbox"></div>
+                    <span>Locate the main navigation menu</span>
+                </div>
+                <div class="checklist-item" onclick="toggleCheckbox(this)">
+                    <div class="checkbox"></div>
+                    <span>Access keyword research tools</span>
+                </div>
+                <div class="checklist-item" onclick="toggleCheckbox(this)">
+                    <div class="checkbox"></div>
+                    <span>Find competitor analysis section</span>
+                </div>
+                <div class="checklist-item" onclick="toggleCheckbox(this)">
+                    <div class="checkbox"></div>
+                    <span>Create your first project</span>
+                </div>
+                <div class="checklist-item" onclick="toggleCheckbox(this)">
+                    <div class="checkbox"></div>
+                    <span>Generate your first report</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Keyword Research Section -->
+        <div class="content-section" id="keyword-research">
+            <h2>🔍 Keyword Research Mastery</h2>
+            
+            <div class="keyword-research-simulator">
+                <h3>🎯 Interactive Keyword Research Simulator</h3>
+                <input type="text" class="search-bar" placeholder="Enter your target keyword (e.g., 'digital marketing')" id="keyword-input">
+                <button class="demo-button" onclick="simulateKeywordSearch()">🔍 Analyze Keyword</button>
+                
+                <div id="keyword-results" style="display: none;">
+                    <div class="results-grid">
+                        <div class="result-card">
+                            <h4>Search Volume</h4>
+                            <div class="metric-value" id="search-volume">12,100</div>
+                            <div class="metric-label">Monthly searches</div>
+                        </div>
+                        <div class="result-card">
+                            <h4>Keyword Difficulty</h4>
+                            <div class="metric-value" id="keyword-difficulty">65%</div>
+                            <div class="metric-label">Competition level</div>
+                        </div>
+                        <div class="result-card">
+                            <h4>CPC</h4>
+                            <div class="metric-value" id="cpc">$4.23</div>
+                            <div class="metric-label">Cost per click</div>
+                        </div>
+                        <div class="result-card">
+                            <h4>Competition</h4>
+                            <div class="metric-value" id="competition">0.78</div>
+                            <div class="metric-label">Ad competition</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="workflow-diagram">
+                <h3>🔄 Keyword Research Workflow</h3>
+                <div class="workflow-step" onclick="toggleWorkflowStep(this)">1. Seed Keywords</div>
+                <span class="workflow-arrow">→</span>
+                <div class="workflow-step" onclick="toggleWorkflowStep(this)">2. Volume Analysis</div>
+                <span class="workflow-arrow">→</span>
+                <div class="workflow-step" onclick="toggleWorkflowStep(this)">3. Difficulty Assessment</div>
+                <span class="workflow-arrow">→</span>
+                <div class="workflow-step" onclick="toggleWorkflowStep(this)">4. Intent Analysis</div>
+                <span class="workflow-arrow">→</span>
+                <div class="workflow-step" onclick="toggleWorkflowStep(this)">5. Opportunity Ranking</div>
+            </div>
+
+            <div class="interactive-demo">
+                <h4>🎮 Interactive Exercises</h4>
+                <button class="demo-button" onclick="startKeywordChallenge()">Start Keyword Challenge</button>
+                <button class="demo-button" onclick="showKeywordTips()">View Pro Tips</button>
+                <button class="demo-button" onclick="analyzeKeywordIntent()">Analyze Intent</button>
+                <div id="challenge-content" style="display: none; margin-top: 20px;">
+                    <p><strong>Challenge:</strong> Find 5 keywords with search volume &gt; 1,000 and difficulty &lt; 50 for "fitness equipment"</p>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 0%" id="challenge-progress"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tip-box">
+                <h4>💡 Pro Keyword Research Tips</h4>
+                <ul>
+                    <li><strong>Start Broad:</strong> Begin with seed keywords then expand using SEMrush's keyword suggestions</li>
+                    <li><strong>Balance Metrics:</strong> Look for keywords with decent volume but manageable competition</li>
+                    <li><strong>Intent Matters:</strong> Match keywords to user intent (informational, commercial, transactional)</li>
+                    <li><strong>Seasonal Trends:</strong> Check keyword trends to identify seasonal opportunities</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Competitor Analysis Section -->
+        <div class="content-section" id="competitor-analysis">
+            <h2>👥 Competitor Analysis Deep Dive</h2>
+            
+            <div class="interactive-demo">
+                <h3>🕵️ Competitor Intelligence Simulator</h3>
+                <input type="text" class="search-bar" placeholder="Enter competitor domain (e.g., competitor.com)" id="competitor-input">
+                <button class="demo-button" onclick="analyzeCompetitor()">🔍 Analyze Competitor</button>
+                
+                <div id="competitor-results" style="display: none;">
+                    <div class="feature-grid">
+                        <div class="metric-box">
+                            <div class="metric-value">2,847</div>
+                            <div class="metric-label">Organic Keywords</div>
+                        </div>
+                        <div class="metric-box">
+                            <div class="metric-value">45K</div>
+                            <div class="metric-label">Monthly Traffic</div>
+                        </div>
+                        <div class="metric-box">
+                            <div class="metric-value">$12.3K</div>
+                            <div class="metric-label">Traffic Value</div>
+                        </div>
+                        <div class="metric-box">
+                            <div class="metric-value">892</div>
+                            <div class="metric-label">Backlinks</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tutorial-steps">
+                <h3>🎯 Competitor Analysis Mastery Path</h3>
+                <div class="step" onclick="completeStep(this)">
+                    <span class="step-number">1</span>
+                    <strong>Identify Competitors:</strong> Use SEMrush to find your top organic and paid competitors
+                </div>
+                <div class="step" onclick="completeStep(this)">
+                    <span class="step-number">2</span>
+                    <strong>Keyword Gap Analysis:</strong> Find keywords your competitors rank for but you don't
+                </div>
+                <div class="step" onclick="completeStep(this)">
+                    <span class="step-number">3</span>
+                    <strong>Content Analysis:</strong> Analyze competitor content strategies and top-performing pages
+                </div>
+                <div class="step" onclick="completeStep(this)">
+                    <span class="step-number">4</span>
+                    <strong>Backlink Opportunities:</strong> Identify sites linking to competitors but not to you
+                </div>
+                <div class="step" onclick="completeStep(this)">
+                    <span class="step-number">5</span>
+                    <strong>Ad Strategy Intel:</strong> Analyze competitor PPC strategies and ad copy
+                </div>
+            </div>
+
+            <div class="case-study">
+                <h3>📊 Case Study: E-commerce Competitor Analysis</h3>
+                <p>See how a mid-sized e-commerce site used SEMrush competitor analysis to increase organic traffic by 340%</p>
+                <div class="before-after">
+                    <div class="before">
+                        <h4>🔴 Before Analysis</h4>
+                        <ul>
+                            <li>Limited keyword targeting</li>
+                            <li>Low competitor awareness</li>
+                            <li>Missed opportunities</li>
+                            <li>15K monthly organic traffic</li>
+                        </ul>
+                    </div>
+                    <div class="after">
+                        <h4>🟢 After Implementation</h4>
+                        <ul>
+                            <li>Expanded keyword portfolio</li>
+                            <li>Strategic content gaps filled</li>
+                            <li>New backlink opportunities</li>
+                            <li>66K monthly organic traffic</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Site Audit Section -->
+        <div class="content-section" id="site-audit">
+            <h2>🔧 Site Audit Mastery</h2>
+            
+            <div class="interactive-demo">
+                <h3>🏥 Site Health Simulator</h3>
+                <input type="text" class="search-bar" placeholder="Enter your domain for audit simulation" id="audit-input">
+                <button class="demo-button" onclick="simulateSiteAudit()">🔍 Run Site Audit</button>
+                
+                <div id="audit-results" style="display: none;">
+                    <div class="feature-grid">
+                        <div class="metric-box">
+                            <div class="metric-value" style="color: #f39c12;">78</div>
+                            <div class="metric-label">Site Health Score</div>
+                        </div>
+                        <div class="metric-box">
+                            <div class="metric-value" style="color: #e74c3c;">23</div>
+                            <div class="metric-label">Errors Found</div>
+                        </div>
+                        <div class="metric-box">
+                            <div class="metric-value" style="color: #f39c12;">45</div>
+                            <div class="metric-label">Warnings</div>
+                        </div>
+                        <div class="metric-box">
+                            <div class="metric-value" style="color: #27ae60;">156</div>
+                            <div class="metric-label">Passed Checks</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="checklist">
+                <h4>🎯 Site Audit Priority Checklist</h4>
+                <div class="checklist-item" onclick="toggleCheckbox(this)">
+                    <div class="checkbox"></div>
+                    <span>Fix broken internal links <span class="badge">High Priority</span></span>
+                </div>
+                <div class="checklist-item" onclick="toggleCheckbox(this)">
+                    <div class="checkbox"></div>
+                    <span>Optimize page loading speed <span class="badge">High Priority</span></span>
+                </div>
+                <div class="checklist-item" onclick="toggleCheckbox(this)">
+                    <div class="checkbox"></div>
+                    <span>Add missing meta descriptions <span class="badge">Medium Priority</span></span>
+                </div>
+                <div class="checklist-item" onclick="toggleCheckbox(this)">
+                    <div class="checkbox"></div>
+                    <span>Improve mobile responsiveness <span class="badge">High Priority</span></span>
+                </div>
+                <div class="checklist-item" onclick="toggleCheckbox(this)">
+                    <div class="checkbox"></div>
+                    <span>Fix duplicate content issues <span class="badge">Medium Priority</span></span>
+                </div>
+            </div>
+
+            <div class="tip-box">
+                <h4>🚀 Site Audit Best Practices</h4>
+                <ul>
+                    <li><strong>Regular Monitoring:</strong> Run audits monthly to catch issues early</li>
+                    <li><strong>Prioritize by Impact:</strong> Focus on errors that affect rankings most</li>
+                    <li><strong>Track Progress:</strong> Monitor site health score improvements over time</li>
+                    <li><strong>Technical SEO:</strong> Address crawlability and indexation issues first</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Backlink Analysis Section -->
+        <div class="content-section" id="backlink-analysis">
+            <h2>🔗 Backlink Analysis & Link Building</h2>
+            
+            <div class="interactive-demo">
+                <h3>🔍 Backlink Profile Analyzer</h3>
+                <input type="text" class="search-bar" placeholder="Enter domain to analyze backlinks" id="backlink-input">
+                <button class="demo-button" onclick="analyzeBacklinks()">🔍 Analyze Backlinks</button>
+                
+                <div id="backlink-results" style="display: none;">
+                    <div class="feature-grid">
+                        <div class="metric-box">
+                            <div class="metric-value">1,247</div>
+                            <div class="metric-label">Total Backlinks</div>
+                        </div>
+                        <div class="metric-box">
+                            <div class="metric-value">89</div>
+                            <div class="metric-label">Referring Domains</div>
+                        </div>
+                        <div class="metric-box">
+                            <div class="metric-value">67</div>
+                            <div class="metric-label">Authority Score</div>
+                        </div>
+                        <div class="metric-box">
+                            <div class="metric-value">92%</div>
+                            <div class="metric-label">Follow Links</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="workflow-diagram">
+                <h3>🔄 Link Building Workflow</h3>
+                <div class="workflow-step" onclick="toggleWorkflowStep(this)">1. Audit Current Profile</div>
+                <span class="workflow-arrow">→</span>
+                <div class="workflow-step" onclick="toggleWorkflowStep(this)">2. Competitor Analysis</div>
+                <span class="workflow-arrow">→</span>
+                <div class="workflow-step" onclick="toggleWorkflowStep(this)">3. Opportunity Research</div>
+                <span class="workflow-arrow">→</span>
+                <div class="workflow-step" onclick="toggleWorkflowStep(this)">4. Outreach Campaign</div>
+                <span class="workflow-arrow">→</span>
+                <div class="workflow-step" onclick="toggleWorkflowStep(this)">5. Monitor Results</div>
+            </div>
+
+            <div class="tutorial-steps">
+                <h3>📈 Link Building Mastery Steps</h3>
+                <div class="step" onclick="completeStep(this)">
+                    <span class="step-number">1</span>
+                    <strong>Backlink Profile Analysis:</strong> Understand your current link profile health and opportunities
+                </div>
+                <div class="step" onclick="completeStep(this)">
+                    <span class="step-number">2</span>
+                    <strong>Competitor Link Mining:</strong> Find where competitors get their best links
+                </div>
+                <div class="step" onclick="completeStep(this)">
+                    <span class="step-number">3</span>
+                    <strong>Broken Link Building:</strong> Identify and capitalize on broken link opportunities
+                </div>
+                <div class="step" onclick="completeStep(this)">
+                    <span class="step-number">4</span>
+                    <strong>Content-Based Outreach:</strong> Create linkable assets and outreach campaigns
+                </div>
+                <div class="step" onclick="completeStep(this)">
+                    <span class="step-number">5</span>
+                    <strong>Link Monitoring:</strong> Track new links and monitor link health over time</div>
+            </div>
+        </div>
+
+        <!-- Content Gap Analysis Section -->
+        <div class="content-section" id="content-gap">
+            <h2>📝 Content Gap Analysis</h2>
+            
+            <div class="interactive-demo">
+                <h3>🎯 Content Opportunity Finder</h3>
+                <div class="feature-grid">
+                    <input type="text" class="search-bar" placeholder="Your domain" id="your-domain">
+                    <input type="text" class="search-bar" placeholder="Competitor 1" id="competitor1">
+                    <input type="text" class="search-bar" placeholder="Competitor 2" id="competitor2">
+                    <button class="demo-button" onclick="findContentGaps()">🔍 Find Content Gaps</button>
+                </div>
+                
+                <div id="content-gaps" style="display: none;">
+                    <h4>🎯 Content Opportunities Found:</h4>
+                    <div class="results-grid">
+                        <div class="result-card">
+                            <h4>"Best email marketing tools"</h4>
+                            <p>Search Volume: 2,400/month</p>
+                            <p>Difficulty: 45%</p>
+                            <p>Gap Score: High</p>
+                        </div>
+                        <div class="result-card">
+                            <h4>"Email automation workflows"</h4>
+                            <p>Search Volume: 1,800/month</p>
+                            <p>Difficulty: 38%</p>
+                            <p>Gap Score: Medium</p>
+                        </div>
+                        <div class="result-card">
+                            <h4>"Email marketing ROI"</h4>
+                            <p>Search Volume: 1,200/month</p>
+                            <p>Difficulty: 42%</p>
+                            <p>Gap Score: High</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tip-box">
+                <h4>✍️ Content Gap Analysis Strategy</h4>
+                <ul>
+                    <li><strong>Competitor Content Audit:</strong> Analyze top-performing competitor content</li>
+                    <li><strong>Keyword Gap Analysis:</strong> Find keywords competitors rank for but you don't</li>
+                    <li><strong>Topic Clusters:</strong> Identify content themes you're missing</li>
+                    <li><strong>Content Quality Assessment:</strong> Compare content depth and quality</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Rank Tracking Section -->
+        <div class="content-section" id="rank-tracking">
+            <h2>📊 Rank Tracking & Monitoring</h2>
+            
+            <div class="interactive-demo">
+                <h3>📈 Ranking Performance Simulator</h3>
+                <button class="demo-button" onclick="showRankingTrends()">📊 View Ranking Trends</button>
+                <button class="demo-button" onclick="simulateRankingAlerts()">🔔 Setup Alerts</button>
+                <button class="demo-button" onclick="showCompetitorRankings()">👥 Competitor Rankings</button>
+                
+                <div id="ranking-dashboard" style="display: none;">
+                    <div class="feature-grid">
+                        <div class="metric-box">
+                            <div class="metric-value" style="color: #27ae60;">+23</div>
+                            <div class="metric-label">Positions Gained</div>
+                        </div>
+                        <div class="metric-box">
+                            <div class="metric-value" style="color: #e74c3c;">-7</div>
+                            <div class="metric-label">Positions Lost</div>
+                        </div>
+                        <div class="metric-box">
+                            <div class="metric-value">156</div>
+                            <div class="metric-label">Keywords Tracked</div>
+                        </div>
+                        <div class="metric-box">
+                            <div class="metric-value">78.5%</div>
+                            <div class="metric-label">Visibility Score</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="checklist">
+                <h4>📋 Rank Tracking Setup Checklist</h4>
+                <div class="checklist-item" onclick="toggleCheckbox(this)">
+                    <div class="checkbox"></div>
+                    <span>Set up keyword tracking campaign</span>
+                </div>
+                <div class="checklist-item" onclick="toggleCheckbox(this)">
+                    <div class="checkbox"></div>
+                    <span>Configure competitor tracking</span>
+                </div>
+                <div class="checklist-item" onclick="toggleCheckbox(this)">
+                    <div class="checkbox"></div>
+                    <span>Set up ranking alerts</span>
+                </div>
+                <div class="checklist-item" onclick="toggleCheckbox(this)">
+                    <div class="checkbox"></div>
+                    <span>Create ranking reports</span>
+                </div>
+                <div class="checklist-item" onclick="toggleCheckbox(this)">
+                    <div class="checkbox"></div>
+                    <span>Monitor local rankings</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Case Studies Section -->
+        <div class="content-section" id="case-studies">
+            <h2>📚 Real-World Case Studies</h2>
+            
+            <div class="case-study">
+                <h3>🏆 Case Study 1: SaaS Company SEO Transformation</h3>
+                <p><strong>Challenge:</strong> A B2B SaaS company needed to increase organic traffic and lead generation in a competitive market.</p>
+                
+                <div class="before-after">
+                    <div class="before">
+                        <h4>🔴 Starting Point</h4>
+                        <ul>
+                            <li>3,200 monthly organic visitors</li>
+                            <li>45 ranking keywords</li>
+                            <li>12 leads per month from organic</li>
+                            <li>High bounce rate (78%)</li>
+                        </ul>
+                    </div>
+                    <div class="after">
+                        <h4>🟢 After 6 Months</h4>
+                        <ul>
+                            <li>18,700 monthly organic visitors</li>
+                            <li>234 ranking keywords</li>
+                            <li>89 leads per month from organic</li>
+                            <li>Improved bounce rate (42%)</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="tip-box">
+                    <h4>🎯 Key Strategies Used</h4>
+                    <ul>
+                        <li><strong>Competitor Analysis:</strong> Identified 150+ competitor keywords to target</li>
+                        <li><strong>Content Gap Analysis:</strong> Created 45 pieces of targeted content</li>
+                        <li><strong>Technical SEO:</strong> Fixed 89 technical issues found in site audit</li>
+                        <li><strong>Link Building:</strong> Acquired 23 high-quality backlinks</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="case-study">
+                <h3>🏆 Case Study 2: E-commerce Site Recovery</h3>
+                <p><strong>Challenge:</strong> An e-commerce site experienced significant traffic loss after a Google algorithm update.</p>
+                
+                <div class="before-after">
+                    <div class="before">
+                        <h4>🔴 Post-Update Impact</h4>
+                        <ul>
+                            <li>65% traffic drop</li>
+                            <li>Revenue down 40%</li>
+                            <li>Many keywords lost rankings</li>
+                            <li>Site health score: 34</li>
+                        </ul>
+                    </div>
+                    <div class="after">
+                        <h4>🟢 Recovery Results</h4>
+                        <ul>
+                            <li>Traffic restored to 110% of pre-update levels</li>
+                            <li>Revenue increased 25% above previous high</li>
+                            <li>Stronger keyword portfolio</li>
+                            <li>Site health score: 91</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="interactive-demo">
+                <h3>🎮 Case Study Analysis Exercise</h3>
+                <button class="demo-button" onclick="startCaseStudyQuiz()">📝 Start Case Study Quiz</button>
+                <button class="demo-button" onclick="showSuccessFactors()">🔍 Analyze Success Factors</button>
+                <button class="demo-button" onclick="createYourStrategy()">🎯 Create Your Strategy</button>
+                
+                <div id="quiz-content" style="display: none;">
+                    <h4>📊 Case Study Quiz</h4>
+                    <p>Test your understanding of the success factors from these case studies.</p>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 0%" id="quiz-progress"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Navigation functionality
+        function showSection(sectionId) {
+            // Hide all sections
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Remove active class from all tabs
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected section
+            document.getElementById(sectionId).classList.add('active');
+            
+            // Add active class to corresponding tab
+            document.querySelector(`[data-section="${sectionId}"]`).classList.add('active');
+        }
+
+        // Tab navigation
+        document.querySelectorAll('.nav-tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                const sectionId = this.dataset.section;
+                showSection(sectionId);
+            });
+        });
+
+        // Step completion
+        function completeStep(stepElement) {
+            stepElement.classList.add('completed');
+            
+            // Update progress
+            const steps = stepElement.parentElement.querySelectorAll('.step');
+            const completedSteps = stepElement.parentElement.querySelectorAll('.step.completed');
+            const progressPercent = (completedSteps.length / steps.length) * 100;
+            
+            // Update progress bar if it exists
+            const progressBar = document.querySelector('.progress-fill');
+            if (progressBar) {
+                progressBar.style.width = Math.max(progressPercent, 10) + '%';
+            }
+        }
+
+        // Checkbox functionality
+        function toggleCheckbox(item) {
+            const checkbox = item.querySelector('.checkbox');
+            checkbox.classList.toggle('checked');
+        }
+
+        // Workflow step toggle
+        function toggleWorkflowStep(step) {
+            step.classList.toggle('completed');
+        }
+
+        // Simulator functions
+        function highlightNavItem(item, section) {
+            // Remove active class from all items
+            document.querySelectorAll('.simulator-nav-item').forEach(navItem => {
+                navItem.classList.remove('active');
+            });
+            
+            // Add active class to clicked item
+            item.classList.add('active');
+            
+            // Update content based on section
+            const contentArea = document.getElementById('nav-content');
+            const sectionContent = {
+                'dashboard': {
+                    title: 'Dashboard',
+                    description: 'Your SEMrush home base with overview metrics and quick access to all tools'
+                },
+                'keyword-analytics': {
+                    title: 'Keyword Analytics',
+                    description: 'Comprehensive keyword research and analysis tools'
+                },
+                'domain-analytics': {
+                    title: 'Domain Analytics',
+                    description: 'Deep dive into any domain\'s SEO performance and strategy'
+                },
+                'competitive-research': {
+                    title: 'Competitive Research',
+                    description: 'Compare your site against competitors and find opportunities'
+                },
+                'link-building': {
+                    title: 'Link Building',
+                    description: 'Discover and manage link building opportunities'
+                },
+                'projects': {
+                    title: 'Projects',
+                    description: 'Organize and track your SEO campaigns and clients'
+                }
+            };
+            
+            const content = sectionContent[section];
+            contentArea.innerHTML = `
+                <div class="metric-box">
+                    <div class="metric-value">${content.title}</div>
+                    <div class="metric-label">${content.description}</div>
+                </div>
+            `;
+        }
+
+        // Keyword research simulator
+        function simulateKeywordSearch() {
+            const keyword = document.getElementById('keyword-input').value;
+            if (!keyword) {
+                alert('Please enter a keyword to analyze');
+                return;
+            }
+            
+            // Show results
+            document.getElementById('keyword-results').style.display = 'block';
+            
+            // Simulate loading with random but realistic data
+            setTimeout(() => {
+                const volume = Math.floor(Math.random() * 50000) + 1000;
+                const difficulty = Math.floor(Math.random() * 100) + 1;
+                const cpc = (Math.random() * 10 + 0.5).toFixed(2);
+                const competition = (Math.random() * 1).toFixed(2);
+                
+                document.getElementById('search-volume').textContent = volume.toLocaleString();
+                document.getElementById('keyword-difficulty').textContent = difficulty + '%';
+                document.getElementById('cpc').textContent = '$' + cpc;
+                document.getElementById('competition').textContent = competition;
+            }, 500);
+        }
+
+        // Competitor analysis simulator
+        function analyzeCompetitor() {
+            const competitor = document.getElementById('competitor-input').value;
+            if (!competitor) {
+                alert('Please enter a competitor domain');
+                return;
+            }
+            
+            document.getElementById('competitor-results').style.display = 'block';
+        }
+
+        // Site audit simulator
+        function simulateSiteAudit() {
+            const domain = document.getElementById('audit-input').value;
+            if (!domain) {
+                alert('Please enter a domain to audit');
+                return;
+            }
+            
+            document.getElementById('audit-results').style.display = 'block';
+        }
+
+        // Backlink analysis simulator
+        function analyzeBacklinks() {
+            const domain = document.getElementById('backlink-input').value;
+            if (!domain) {
+                alert('Please enter a domain to analyze');
+                return;
+            }
+            
+            document.getElementById('backlink-results').style.display = 'block';
+        }
+
+        // Content gap finder
+        function findContentGaps() {
+            const yourDomain = document.getElementById('your-domain').value;
+            const competitor1 = document.getElementById('competitor1').value;
+            const competitor2 = document.getElementById('competitor2').value;
+            
+            if (!yourDomain || !competitor1 || !competitor2) {
+                alert('Please enter all domains to compare');
+                return;
+            }
+            
+            document.getElementById('content-gaps').style.display = 'block';
+        }
+
+        // Rank tracking functions
+        function showRankingTrends() {
+            document.getElementById('ranking-dashboard').style.display = 'block';
+        }
+
+        function simulateRankingAlerts() {
+            alert('Ranking alerts configured! You\'ll receive notifications when keywords move up or down by 3+ positions.');
+        }
+
+        function showCompetitorRankings() {
+            alert('Competitor ranking comparison activated! Monitor how your rankings compare to top competitors.');
+        }
+
+        // Interactive challenges
+        function startKeywordChallenge() {
+            document.getElementById('challenge-content').style.display = 'block';
+            
+            // Simulate progress
+            let progress = 0;
+            const interval = setInterval(() => {
+                progress += 20;
+                document.getElementById('challenge-progress').style.width = progress + '%';
+                
+                if (progress >= 100) {
+                    clearInterval(interval);
+                    alert('Challenge completed! You\'ve successfully identified 5 high-opportunity keywords.');
+                }
+            }, 1000);
+        }
+
+        function showKeywordTips() {
+            alert('Pro Tips:\n\n1. Focus on long-tail keywords with lower competition\n2. Use keyword magic tool for expanded suggestions\n3. Check search intent to match content type\n4. Monitor seasonal trends for timing\n5. Group keywords by topic for content clusters');
+        }
+
+        function analyzeKeywordIntent() {
+            alert('Keyword Intent Analysis:\n\nInformational: "how to", "what is", "guide"\nCommercial: "best", "top", "review"\nTransactional: "buy", "discount", "deal"\nNavigational: brand names, specific products');
+        }
+
+        function startCaseStudyQuiz() {
+            document.getElementById('quiz-content').style.display = 'block';
+            
+            // Simulate quiz progress
+            let progress = 0;
+            const interval = setInterval(() => {
+                progress += 25;
+                document.getElementById('quiz-progress').style.width = progress + '%';
+                
+                if (progress >= 100) {
+                    clearInterval(interval);
+                    alert('Quiz completed! You scored 85% - Excellent understanding of SEMrush strategies.');
+                }
+            }, 800);
+        }
+
+        function showSuccessFactors() {
+            alert('Key Success Factors:\n\n✓ Systematic competitor analysis\n✓ Content gap identification\n✓ Technical SEO improvements\n✓ Strategic keyword targeting\n✓ Quality backlink acquisition\n✓ Continuous monitoring & optimization');
+        }
+
+        function createYourStrategy() {
+            alert('Strategy Builder activated! Based on the case studies, create your custom SEMrush implementation plan:\n\n1. Start with competitor analysis\n2. Identify content gaps\n3. Prioritize technical fixes\n4. Build content calendar\n5. Execute link building\n6. Monitor and optimize');
+        }
+
+        // Initialize with random welcome message
+        const welcomeMessages = [
+            "Welcome to SEMrush Mastery! 🚀",
+            "Ready to dominate your SEO game? 💪",
+            "Let's unlock SEMrush's full potential! 🔓",
+            "Your SEO success journey starts here! 🎯"
+        ];
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            const randomMessage = welcomeMessages[Math.floor(Math.random() * welcomeMessages.length)];
+            console.log(randomMessage);
+        });
+    </script>
+</body>
+</html>
