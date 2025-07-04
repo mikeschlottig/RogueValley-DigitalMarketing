@@ -1,0 +1,1491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SpyFu Mastery Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .dashboard-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header .subtitle {
+            font-size: 1.2em;
+            opacity: 0.9;
+            margin-bottom: 10px;
+        }
+
+        .header .tagline {
+            font-size: 1em;
+            opacity: 0.8;
+            font-style: italic;
+        }
+
+        .main-nav {
+            background: rgba(255,255,255,0.95);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .nav-tab {
+            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .nav-tab:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
+
+        .nav-tab.active {
+            background: linear-gradient(45deg, #2ecc71, #27ae60);
+            transform: translateY(-2px);
+        }
+
+        .content-section {
+            display: none;
+            background: rgba(255,255,255,0.95);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .content-section.active {
+            display: block;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .feature-card {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+        }
+
+        .feature-card h3 {
+            font-size: 1.5em;
+            margin-bottom: 10px;
+        }
+
+        .feature-card p {
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+
+        .spyfu-simulator {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            border: 2px solid #e9ecef;
+        }
+
+        .simulator-header {
+            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .simulator-nav {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .simulator-nav-item {
+            background: #fff;
+            border: 1px solid #ddd;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .simulator-nav-item:hover {
+            background: #ff6b6b;
+            color: white;
+        }
+
+        .simulator-nav-item.active {
+            background: #ff6b6b;
+            color: white;
+        }
+
+        .tutorial-steps {
+            background: #e3f2fd;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .step {
+            background: white;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border-left: 4px solid #2196f3;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .step:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transform: translateX(5px);
+        }
+
+        .step.completed {
+            border-left-color: #4caf50;
+            background: #f1f8e9;
+        }
+
+        .step-number {
+            background: #2196f3;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 15px;
+        }
+
+        .step.completed .step-number {
+            background: #4caf50;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background: #e0e0e0;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4caf50, #8bc34a);
+            transition: width 0.5s ease;
+            border-radius: 10px;
+        }
+
+        .interactive-demo {
+            background: #fff3e0;
+            border: 2px solid #ff9800;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .demo-button {
+            background: #ff9800;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            margin: 5px;
+        }
+
+        .demo-button:hover {
+            background: #f57c00;
+            transform: translateY(-2px);
+        }
+
+        .kombat-simulator {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .search-bar {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+
+        .result-card {
+            background: rgba(255,255,255,0.1);
+            padding: 15px;
+            border-radius: 8px;
+            backdrop-filter: blur(5px);
+        }
+
+        .metric-box {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            margin: 10px 0;
+            border: 1px solid #e9ecef;
+        }
+
+        .metric-value {
+            font-size: 2em;
+            font-weight: bold;
+            color: #2196f3;
+        }
+
+        .metric-label {
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        .checklist {
+            background: #f1f8e9;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .checklist-item {
+            display: flex;
+            align-items: center;
+            margin: 10px 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .checklist-item:hover {
+            background: rgba(76, 175, 80, 0.1);
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .checkbox {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #4caf50;
+            border-radius: 3px;
+            margin-right: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .checkbox.checked {
+            background: #4caf50;
+            position: relative;
+        }
+
+        .checkbox.checked::after {
+            content: '✓';
+            color: white;
+            position: absolute;
+            top: -2px;
+            left: 3px;
+            font-weight: bold;
+        }
+
+        .tip-box {
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border-left: 4px solid #ff9800;
+        }
+
+        .tip-box h4 {
+            color: #e65100;
+            margin-bottom: 10px;
+        }
+
+        .workflow-diagram {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .workflow-step {
+            display: inline-block;
+            background: #2196f3;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 25px;
+            margin: 10px;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .workflow-step:hover {
+            background: #1976d2;
+            transform: scale(1.05);
+        }
+
+        .workflow-step.completed {
+            background: #4caf50;
+        }
+
+        .workflow-arrow {
+            font-size: 2em;
+            color: #666;
+            margin: 0 10px;
+        }
+
+        .case-study {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            padding: 25px;
+            border-radius: 15px;
+            margin: 20px 0;
+        }
+
+        .case-study h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+
+        .before-after {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .before-after > div {
+            background: rgba(255,255,255,0.7);
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .before-after .before {
+            border-left: 4px solid #e74c3c;
+        }
+
+        .before-after .after {
+            border-left: 4px solid #27ae60;
+        }
+
+        .badge {
+            background: #ff6b6b;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.8em;
+            font-weight: bold;
+            margin: 0 5px;
+        }
+
+        .badge.pro {
+            background: #f39c12;
+        }
+
+        .badge.expert {
+            background: #8e44ad;
+        }
+
+        .historical-data-viz {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .trend-indicator {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: bold;
+            margin: 5px;
+        }
+
+        .trend-up {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .trend-down {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .trend-stable {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+
+        .venn-diagram {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .venn-circle {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            display: inline-block;
+            margin: 10px;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .venn-circle:hover {
+            transform: scale(1.1);
+        }
+
+        .venn-your-keywords {
+            background: rgba(33, 150, 243, 0.3);
+            border: 3px solid #2196f3;
+        }
+
+        .venn-competitor-keywords {
+            background: rgba(255, 152, 0, 0.3);
+            border: 3px solid #ff9800;
+        }
+
+        .venn-shared-keywords {
+            background: rgba(76, 175, 80, 0.3);
+            border: 3px solid #4caf50;
+        }
+
+        .venn-label {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-weight: bold;
+            color: #333;
+        }
+
+        @media (max-width: 768px) {
+            .nav-tabs {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .nav-tab {
+                width: 100%;
+                max-width: 300px;
+            }
+            
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .before-after {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <div class="header">
+            <h1>🕵️ SpyFu Mastery Dashboard</h1>
+            <p class="subtitle">Complete Interactive Training System for SpyFu Platform Excellence</p>
+            <p class="tagline">"Outsmart Your Competition with 18+ Years of Historical Intelligence"</p>
+        </div>
+
+        <div class="main-nav">
+            <div class="nav-tabs">
+                <button class="nav-tab active" data-section="overview">Platform Overview</button>
+                <button class="nav-tab" data-section="setup">Setup & Navigation</button>
+                <button class="nav-tab" data-section="kombat-tool">Kombat Tool</button>
+                <button class="nav-tab" data-section="keyword-research">Keyword Research</button>
+                <button class="nav-tab" data-section="competitor-analysis">Competitor Analysis</button>
+                <button class="nav-tab" data-section="historical-data">Historical Data</button>
+                <button class="nav-tab" data-section="backlink-analysis">Backlink Analysis</button>
+                <button class="nav-tab" data-section="ppc-intelligence">PPC Intelligence</button>
+                <button class="nav-tab" data-section="case-studies">Case Studies</button>
+            </div>
+        </div>
+
+        <!-- Overview Section -->
+        <div class="content-section active" id="overview">
+            <h2>🎯 SpyFu Platform Overview</h2>
+            <p>Welcome to your comprehensive SpyFu training dashboard! SpyFu is the ultimate competitive intelligence platform with over 18 years of historical data spanning 7 billion results across 109 million domains.</p>
+            
+            <div class="feature-grid">
+                <div class="feature-card" onclick="showSection('kombat-tool')">
+                    <h3>⚔️ Kombat Tool</h3>
+                    <p>Compare multiple competitors simultaneously with Venn diagram visualization to identify keyword gaps and opportunities.</p>
+                </div>
+                <div class="feature-card" onclick="showSection('keyword-research')">
+                    <h3>🔍 Keyword Research</h3>
+                    <p>Discover high-value keywords with difficulty scoring and filter for optimal opportunity identification.</p>
+                </div>
+                <div class="feature-card" onclick="showSection('competitor-analysis')">
+                    <h3>👥 Competitor Analysis</h3>
+                    <p>Uncover competitor strategies, keyword portfolios, and ranking patterns to stay ahead of the competition.</p>
+                </div>
+                <div class="feature-card" onclick="showSection('historical-data')">
+                    <h3>📊 Historical Intelligence</h3>
+                    <p>Leverage 18+ years of historical data to predict trends, identify patterns, and forecast opportunities.</p>
+                </div>
+            </div>
+
+            <div class="tip-box">
+                <h4>💡 Why SpyFu is Different</h4>
+                <p>Unlike other SEO tools that focus on current data, SpyFu maintains historical records dating back to 2006. This unique advantage allows you to identify long-term trends, seasonal patterns, and competitor strategy evolution that other tools simply cannot provide.</p>
+            </div>
+
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: 10%"></div>
+            </div>
+            <p><strong>Overall Progress: 10%</strong> - Let's begin your SpyFu mastery journey!</p>
+        </div>
+
+        <!-- Setup Section -->
+        <div class="content-section" id="setup">
+            <h2>⚙️ SpyFu Setup & Navigation Guide</h2>
+            
+            <div class="spyfu-simulator">
+                <div class="simulator-header">
+                    SpyFu Dashboard Simulator
+                </div>
+                <div class="simulator-nav">
+                    <div class="simulator-nav-item active" onclick="highlightNavItem(this, 'dashboard')">Dashboard</div>
+                    <div class="simulator-nav-item" onclick="highlightNavItem(this, 'keyword-research')">Keyword Research</div>
+                    <div class="simulator-nav-item" onclick="highlightNavItem(this, 'seo-research')">SEO Research</div>
+                    <div class="simulator-nav-item" onclick="highlightNavItem(this, 'ppc-research')">PPC Research</div>
+                    <div class="simulator-nav-item" onclick="highlightNavItem(this, 'projects')">Projects</div>
+                    <div class="simulator-nav-item" onclick="highlightNavItem(this, 'reports')">Reports</div>
+                </div>
+                <div id="nav-content">
+                    <div class="metric-box">
+                        <div class="metric-value">Dashboard</div>
+                        <div class="metric-label">Your SpyFu command center with quick access to all competitive intelligence tools</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tutorial-steps">
+                <h3>📚 Setup Mastery Steps</h3>
+                <div class="step" onclick="completeStep(this)">
+                    <span class="step-number">1</span>
+                    <strong>Account Setup:</strong> Create your SpyFu account and select the appropriate plan for your needs
+                </div>
+                <div class="step" onclick="completeStep(this)">
+                    <span class="step-number">2</span>
+                    <strong>Project Creation:</strong> Set up your first project with your client's domain as the foundation
+                </div>
+                <div class="step" onclick="completeStep(this)">
+                    <span class="step-number">3</span>
+                    <strong>Competitor Import:</strong> Add competitors (SpyFu suggests them automatically)
+                </div>
+                <div class="step" onclick="completeStep(this)">
+                    <span class="step-number">4</span>
+                    <strong>Interface Mastery:</strong> Learn the six main navigation tabs and their functions
+                </div>
+                <div class="step" onclick="completeStep(this)">
+                    <span class="step-number">5</span>
+                    <strong>Search Bar Usage:</strong> Master the central search function for domains and keywords
+                </div>
+            </div>
+
+            <div class="checklist">
+                <h4>✅ Setup Checklist</h4>
+                <div class="checklist-item" onclick="toggleCheckbox(this)">
+                    <div class="checkbox"></div>
+                    <span>Create SpyFu account and select plan</span>
+                </div>
+                <div class="checklist-item" onclick="toggleCheckbox(this)">
+                    <div class="checkbox"></div>
+                    <span>Set up first project with client domain</span>
+                </div>
+                <div class="checklist-item" onclick="toggleCheckbox(this)">
+                    <div class="checkbox"></div>
+                    <span>Import competitor domains</span>
+                </div>
+                <div class="checklist-item" onclick="toggleCheckbox(this)">
+                    <div class="checkbox"></div>
+                    <span>Familiarize with main navigation</span>
+                </div>
+                <div class="checklist-item" onclick="toggleCheckbox(this)">
+                    <div class="checkbox"></div>
+                    <span>Test search functionality</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Kombat Tool Section -->
+        <div class="content-section" id="kombat-tool">
+            <h2>⚔️ Kombat Tool: Multi-Competitor Analysis</h2>
+            
+            <div class="kombat-simulator">
+                <h3>🎯 Interactive Kombat Simulator</h3>
+                <div class="feature-grid">
+                    <input type="text" class="search-bar" placeholder="Your domain" id="your-domain-kombat">
+                    <input type="text" class="search-bar" placeholder="Competitor 1" id="competitor1-kombat">
+                    <input type="text" class="search-bar" placeholder="Competitor 2" id="competitor2-kombat">
+                    <button class="demo-button" onclick="runKombatAnalysis()">⚔️ Run Kombat Analysis</button>
+                </div>
+                
+                <div id="kombat-results" style="display: none;">
+                    <div class="venn-diagram">
+                        <h4>🎯 Keyword Overlap Analysis</h4>
+                        <div class="venn-circle venn-your-keywords" onclick="showKeywordSegment('your-unique')">
+                            <div class="venn-label">Your Unique<br>Keywords<br><strong>247</strong></div>
+                        </div>
+                        <div class="venn-circle venn-shared-keywords" onclick="showKeywordSegment('shared')">
+                            <div class="venn-label">Shared<br>Keywords<br><strong>156</strong></div>
+                        </div>
+                        <div class="venn-circle venn-competitor-keywords" onclick="showKeywordSegment('competitor-unique')">
+                            <div class="venn-label">Competitor<br>Keywords<br><strong>389</strong></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="workflow-diagram">
+                <h3>🔄 Kombat Analysis Workflow</h3>
+                <div class="workflow-step" onclick="toggleWorkflowStep(this)">1. Domain Input</div>
+                <span class="workflow-arrow">→</span>
+                <div class="workflow-step" onclick="toggleWorkflowStep(this)">2. Keyword Discovery</div>
+                <span class="workflow-arrow">→</span>
+                <div class="workflow-step" onclick="toggleWorkflowStep(this)">3. Overlap Analysis</div>
+                <span class="workflow-arrow">→</span>
+                <div class="workflow-step" onclick="toggleWorkflowStep(this)">4. Gap Identification</div>
+                <span class="workflow-arrow">→</span>
+                <div class="workflow-step" onclick="toggleWorkflowStep(this)">5. Opportunity Ranking</div>
+            </div>
+
+            <div class="interactive-demo">
+                <h4>🎮 Kombat Tool Exercises</h4>
+                <button class="demo-button" onclick="explainKombatSegments()">📊 Explain Segments</button>
+                <button class="demo-button" onclick="showKombatTips()">💡 Pro Tips</button>
+                <button class="demo-button" onclick="startKombatChallenge()">🏆 Start Challenge</button>
+                <div id="kombat-explanation" style="display: none; margin-top: 20px;">
+                    <h5>🎯 Kombat Segments Explained:</h5>
+                    <p><strong>All Keywords:</strong> Keywords bought or targeted by any competitor</p>
+                    <p><strong>Core Keywords:</strong> Keywords that all listed competitors target</p>
+                    <p><strong>Consider Buying:</strong> Gaps where competitors target keywords that you don't</p>
+                    <p><strong>Potential Ad Waste:</strong> Keywords you target that competitors avoid</p>
+                </div>
+            </div>
+
+            <div class="tip-box">
+                <h4>⚡ Kombat Tool Success Strategy</h4>
+                <ul>
+                    <li><strong>Focus on "Consider Buying":</strong> These are validated opportunities where multiple competitors invest</li>
+                    <li><strong>Analyze Core Keywords:</strong> These represent industry-essential terms you must compete for</li>
+                    <li><strong>Review "Potential Ad Waste":</strong> Keywords you target that competitors avoid might indicate inefficient spending</li>
+                    <li><strong>Use Historical Data:</strong> Check when competitors started targeting specific keywords for timing intelligence</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Keyword Research Section -->
+        <div class="content-section" id="keyword-research">
+            <h2>🔍 Advanced Keyword Research</h2>
+            
+            <div class="interactive-demo">
+                <h3>🎯 Keyword Difficulty Analyzer</h3>
+                <input type="text" class="search-bar" placeholder="Enter target keyword (e.g., 'digital marketing')" id="keyword-difficulty-input">
+                <button class="demo-button" onclick="analyzeKeywordDifficulty()">🔍 Analyze Difficulty</button>
+                
+                <div id="keyword-difficulty-results" style="display: none;">
+                    <div class="results-grid">
+                        <div class="result-card">
+                            <h4>Difficulty Score</h4>
+                            <div class="metric-value" id="difficulty-score">42</div>
+                            <div class="metric-label">0-100 Scale</div>
+                        </div>
+                        <div class="result-card">
+                            <h4>Search Volume</h4>
+                            <div class="metric-value" id="search-volume-kw">8,100</div>
+                            <div class="metric-label">Monthly searches</div>
+                        </div>
+                        <div class="result-card">
+                            <h4>Competition Level</h4>
+                            <div class="metric-value" id="competition-level">Medium</div>
+                            <div class="metric-label">Competitive intensity</div>
+                        </div>
+                        <div class="result-card">
+                            <h4>Opportunity Score</h4>
+                            <div class="metric-value" id="opportunity-score">High</div>
+                            <div class="metric-label">Ranking potential</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tutorial-steps">
+                <h3>🎯 Keyword Research Mastery Path</h3>
+                <div class="step" onclick="completeStep(this)">
+                    <span class="step-number">1</span>
+                    <strong>Seed Keywords:</strong> Start with broad industry terms and competitor keywords
+                </div>
+                <div class="step" onclick="completeStep(this)">
+                    <span class="step-number">2</span>
+                    <strong>Difficulty Analysis:</strong> Use SpyFu's 0-100 difficulty scoring system
+                </div>
+                <div class="step" onclick="completeStep(this)">
+                    <span class="step-number">3</span>
+                    <strong>Smart Filtering:</strong> Target difficulty <40 for quick wins, volume >1,000 for impact
+                </div>
+                <div class="step" onclick="completeStep(this)">
+                    <span class="step-number">4</span>
+                    <strong>Intent Classification:</strong> Categorize keywords by search intent (informational, transactional, navigational)
+                </div>
+                <div class="step" onclick="completeStep(this)">
+                    <span class="step-number">5</span>
+                    <strong>Opportunity Prioritization:</strong> Focus on positions 11-16 for immediate ranking boosts
+                </div>
+            </div>
+
+            <div class="checklist">
+                <h4>🎯 Keyword Research Checklist</h4>
+                <div class="checklist-item" onclick="toggleCheckbox(this)">
+                    <div class="checkbox"></div>
+                    <span>Identify seed keywords from competitors <span class="badge">High Priority</span></span>
+                </div>
+                <div class="checklist-item" onclick="toggleCheckbox(this)">
+                    <div class="checkbox"></div>
+                    <span>Filter by difficulty score (<40 for quick wins) <span class="badge">Critical</span></span>
+                </div>
+                <div class="checklist-item" onclick="toggleCheckbox(this)">
+                    <div class="checkbox"></div>
+                    <span>Analyze search volume and commercial intent <span class="badge">Important</span></span>
+                </div>
+                <div class="checklist-item" onclick="toggleCheckbox(this)">
+                    <span class="checkbox"></div>
+                    <span>Target long-tail keywords (3+ words) <span class="badge">Medium Priority</span></span>
+                </div>
+                <div class="checklist-item" onclick="toggleCheckbox(this)">
+                    <div class="checkbox"></div>
+                    <span>Focus on page 2 rankings (positions 11-16) <span class="badge">Quick Win</span></span>
+                </div>
+            </div>
+
+            <div class="tip-box">
+                <h4>🚀 Keyword Research Best Practices</h4>
+                <ul>
+                    <li><strong>Difficulty Factors:</strong> SpyFu considers domain strength, on-page optimization, and authority sites (.gov, .edu)</li>
+                    <li><strong>Quick Wins Strategy:</strong> Target keywords ranking 11-16 for fastest results</li>
+                    <li><strong>Volume vs. Difficulty:</strong> Balance search volume with ranking difficulty for optimal ROI</li>
+                    <li><strong>Intent Matters:</strong> Match keyword intent to content type and business goals</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Competitor Analysis Section -->
+        <div class="content-section" id="competitor-analysis">
+            <h2>👥 Competitor Analysis Deep Dive</h2>
+            
+            <div class="interactive-demo">
+                <h3>🕵️ Competitor Intelligence Dashboard</h3>
+                <input type="text" class="search-bar" placeholder="Enter competitor domain (e.g., competitor.com)" id="competitor-analysis-input">
+                <button class="demo-button" onclick="runCompetitorAnalysis()">🔍 Analyze Competitor</button>
+                
+                <div id="competitor-analysis-results" style="display: none;">
+                    <div class="feature-grid">
+                        <div class="metric-box">
+                            <div class="metric-value">3,847</div>
+                            <div class="metric-label">Organic Keywords</div>
+                        </div>
+                        <div class="metric-box">
+                            <div class="metric-value">78K</div>
+                            <div class="metric-label">Monthly Organic Traffic</div>
+                        </div>
+                        <div class="metric-box">
+                            <div class="metric-value">$23.7K</div>
+                            <div class="metric-label">Traffic Value</div>
+                        </div>
+                        <div class="metric-box">
+                            <div class="metric-value">1,247</div>
+                            <div class="metric-label">Paid Keywords</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="historical-data-viz">
+                <h4>📊 Historical Performance Trends</h4>
+                <div class="results-grid">
+                    <div class="result-card">
+                        <h5>Ranking Trends</h5>
+                        <div class="trend-indicator trend-up">📈 +23% Growth</div>
+                        <p>Consistent upward ranking trajectory over 6 months</p>
+                    </div>
+                    <div class="result-card">
+                        <h5>Keyword Expansion</h5>
+                        <div class="trend-indicator trend-up">🎯 +456 New Keywords</div>
+                        <p>Aggressive keyword targeting in Q3-Q4</p>
+                    </div>
+                    <div class="result-card">
+                        <h5>Content Strategy</h5>
+                        <div class="trend-indicator trend-stable">📝 Stable Output</div>
+                        <p>Consistent content publication schedule</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tutorial-steps">
+                <h3>🎯 Competitor Analysis Framework</h3>
+                <div class="step" onclick="completeStep(this)">
+                    <span class="step-number">1</span>
+                    <strong>Domain Overview:</strong> Analyze competitor's organic and paid keyword portfolios
+                </div>
+                <div class="step" onclick="completeStep(this)">
+                    <span class="step-number">2</span>
+                    <strong>Historical Analysis:</strong> Review ranking history and strategy evolution
+                </div>
+                <div class="step" onclick="completeStep(this)">
+                    <span class="step-number">3</span>
+                    <strong>Keyword Gap Analysis:</strong> Identify keywords competitors rank for but you don't
+                </div>
+                <div class="step" onclick="completeStep(this)">
+                    <span class="step-number">4</span>
+                    <strong>Content Strategy Review:</strong> Analyze top-performing competitor content
+                </div>
+                <div class="step" onclick="completeStep(this)">
+                    <span class="step-number">5</span>
+                    <strong>Opportunity Prioritization:</strong> Rank opportunities by difficulty and potential impact
+                </div>
+            </div>
+
+            <div class="case-study">
+                <h3>📊 Quick Analysis: Competitor Intelligence Success</h3>
+                <p>See how competitor analysis reveals strategic opportunities through SpyFu's comprehensive data.</p>
+                <div class="before-after">
+                    <div class="before">
+                        <h4>🔍 Discovery Phase</h4>
+                        <ul>
+                            <li>Competitor targets 3,847 organic keywords</li>
+                            <li>78K monthly organic traffic</li>
+                            <li>$23.7K estimated traffic value</li>
+                            <li>Strong in long-tail keywords</li>
+                        </ul>
+                    </div>
+                    <div class="after">
+                        <h4>🎯 Strategic Insights</h4>
+                        <ul>
+                            <li>456 new keywords added in Q3-Q4</li>
+                            <li>Focus on commercial intent terms</li>
+                            <li>Seasonal campaign patterns identified</li>
+                            <li>Content gap opportunities revealed</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Historical Data Section -->
+        <div class="content-section" id="historical-data">
+            <h2>📊 Historical Data Intelligence</h2>
+            
+            <div class="interactive-demo">
+                <h3>📈 Trend Prediction Simulator</h3>
+                <button class="demo-button" onclick="showSeasonalTrends()">📅 Seasonal Patterns</button>
+                <button class="demo-button" onclick="showCompetitorEvolution()">🔄 Competitor Evolution</button>
+                <button class="demo-button" onclick="showKeywordLifecycle()">📊 Keyword Lifecycle</button>
+                
+                <div id="historical-insights" style="display: none;">
+                    <div class="historical-data-viz">
+                        <h4>🎯 Historical Intelligence Dashboard</h4>
+                        <div class="results-grid">
+                            <div class="result-card">
+                                <h5>Seasonal Trends</h5>
+                                <div class="trend-indicator trend-up">🎄 Holiday Surge: +340%</div>
+                                <p>Q4 search volume increases predictably</p>
+                            </div>
+                            <div class="result-card">
+                                <h5>Competitor Strategy</h5>
+                                <div class="trend-indicator trend-stable">📈 Consistent Growth</div>
+                                <p>18-month upward trajectory maintained</p>
+                            </div>
+                            <div class="result-card">
+                                <h5>Market Validation</h5>
+                                <div class="trend-indicator trend-up">✅ Multi-Competitor Investment</div>
+                                <p>5+ competitors target same keywords</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tutorial-steps">
+                <h3>🔮 Historical Data Mastery</h3>
+                <div class="step" onclick="completeStep(this)">
+                    <span class="step-number">1</span>
+                    <strong>Seasonal Pattern Recognition:</strong> Identify recurring yearly cycles and seasonal demand
+                </div>
+                <div class="step" onclick="completeStep(this)">
+                    <span class="step-number">2</span>
+                    <strong>Competitor Strategy Evolution:</strong> Track how successful competitors adapt over time
+                </div>
+                <div class="step" onclick="completeStep(this)">
+                    <span class="step-number">3</span>
+                    <strong>Market Validation Analysis:</strong> Identify keywords with sustained competitor investment
+                </div>
+                <div class="step" onclick="completeStep(this)">
+                    <span class="step-number">4</span>
+                    <strong>Trend Prediction Modeling:</strong> Use historical patterns to forecast future opportunities
+                </div>
+                <div class="step" onclick="completeStep(this)">
+                    <span class="step-number">5</span>
+                    <strong>Opportunity Timing:</strong> Determine optimal timing for keyword targeting based on historical data
+                </div>
+            </div>
+
+            <div class="tip-box">
+                <h4>🎯 Historical Data Intelligence Tips</h4>
+                <ul>
+                    <li><strong>18+ Years of Data:</strong> SpyFu's historical database dates back to 2006, providing unmatched trend analysis</li>
+                    <li><strong>Seasonal Forecasting:</strong> Identify when competitors historically start seasonal campaigns</li>
+                    <li><strong>Strategy Evolution:</strong> Track how competitors adapted to algorithm updates and market changes</li>
+                    <li><strong>Market Validation:</strong> Keywords targeted by multiple competitors over time represent proven opportunities</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Backlink Analysis Section -->
+        <div class="content-section" id="backlink-analysis">
+            <h2>🔗 Backlink Analysis & Outreach</h2>
+            
+            <div class="interactive-demo">
+                <h3>🔍 Backlink Intelligence Dashboard</h3>
+                <input type="text" class="search-bar" placeholder="Enter domain for backlink analysis" id="backlink-analysis-input">
+                <button class="demo-button" onclick="analyzeBacklinks()">🔍 Analyze Backlinks</button>
+                
+                <div id="backlink-analysis-results" style="display: none;">
+                    <div class="feature-grid">
+                        <div class="metric-box">
+                            <div class="metric-value">2,847</div>
+                            <div class="metric-label">Total Backlinks</div>
+                        </div>
+                        <div class="metric-box">
+                            <div class="metric-value">156</div>
+                            <div class="metric-label">Referring Domains</div>
+                        </div>
+                        <div class="metric-box">
+                            <div class="metric-value">78%</div>
+                            <div class="metric-label">Follow Links</div>
+                        </div>
+                        <div class="metric-box">
+                            <div class="metric-value">High</div>
+                            <div class="metric-label">Domain Authority</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="workflow-diagram">
+                <h3>🔄 Link Building Workflow</h3>
+                <div class="workflow-step" onclick="toggleWorkflowStep(this)">1. Profile Analysis</div>
+                <span class="workflow-arrow">→</span>
+                <div class="workflow-step" onclick="toggleWorkflowStep(this)">2. Competitor Research</div>
+                <span class="workflow-arrow">→</span>
+                <div class="workflow-step" onclick="toggleWorkflowStep(this)">3. Opportunity Discovery</div>
+                <span class="workflow-arrow">→</span>
+                <div class="workflow-step" onclick="toggleWorkflowStep(this)">4. Contact Identification</div>
+                <span class="workflow-arrow">→</span>
+                <div class="workflow-step" onclick="toggleWorkflowStep(this)">5. Outreach Campaign</div>
+            </div>
+
+            <div class="checklist">
+                <h4>🎯 Backlink Analysis Checklist</h4>
+                <div class="checklist-item" onclick="toggleCheckbox(this)">
+                    <div class="checkbox"></div>
+                    <span>Analyze current backlink profile</span>
+                </div>
+                <div class="checklist-item" onclick="toggleCheckbox(this)">
+                    <div class="checkbox"></div>
+                    <span>Identify competitor link sources</span>
+                </div>
+                <div class="checklist-item" onclick="toggleCheckbox(this)">
+                    <div class="checkbox"></div>
+                    <span>Find sites linking to multiple competitors</span>
+                </div>
+                <div class="checklist-item" onclick="toggleCheckbox(this)">
+                    <div class="checkbox"></div>
+                    <span>Extract contact information for outreach</span>
+                </div>
+                <div class="checklist-item" onclick="toggleCheckbox(this)">
+                    <div class="checkbox"></div>
+                    <span>Develop systematic outreach strategy</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- PPC Intelligence Section -->
+        <div class="content-section" id="ppc-intelligence">
+            <h2>💰 PPC Intelligence & Ad Research</h2>
+            
+            <div class="interactive-demo">
+                <h3>📊 PPC Strategy Analyzer</h3>
+                <input type="text" class="search-bar" placeholder="Enter domain for PPC analysis" id="ppc-analysis-input">
+                <button class="demo-button" onclick="analyzePPCStrategy()">💰 Analyze PPC Strategy</button>
+                
+                <div id="ppc-analysis-results" style="display: none;">
+                    <div class="feature-grid">
+                        <div class="metric-box">
+                            <div class="metric-value">1,247</div>
+                            <div class="metric-label">Paid Keywords</div>
+                        </div>
+                        <div class="metric-box">
+                            <div class="metric-value">$45.2K</div>
+                            <div class="metric-label">Estimated Monthly Spend</div>
+                        </div>
+                        <div class="metric-box">
+                            <div class="metric-value">87</div>
+                            <div class="metric-label">Active Ad Variations</div>
+                        </div>
+                        <div class="metric-box">
+                            <div class="metric-value">$3.67</div>
+                            <div class="metric-label">Average CPC</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tutorial-steps">
+                <h3>💡 PPC Intelligence Mastery</h3>
+                <div class="step" onclick="completeStep(this)">
+                    <span class="step-number">1</span>
+                    <strong>Ad History Analysis:</strong> Review competitor ad copy and campaign duration
+                </div>
+                <div class="step" onclick="completeStep(this)">
+                    <span class="step-number">2</span>
+                    <strong>Keyword Bidding Intelligence:</strong> Identify high-value keywords from competitor spend
+                </div>
+                <div class="step" onclick="completeStep(this)">
+                    <span class="step-number">3</span>
+                    <strong>Seasonal Campaign Patterns:</strong> Use historical data to plan campaign timing
+                </div>
+                <div class="step" onclick="completeStep(this)">
+                    <span class="step-number">4</span>
+                    <strong>Ad Copy Optimization:</strong> Analyze successful competitor ad variations
+                </div>
+                <div class="step" onclick="completeStep(this)">
+                    <span class="step-number">5</span>
+                    <strong>Budget Allocation:</strong> Understand competitor spending patterns and priorities
+                </div>
+            </div>
+
+            <div class="tip-box">
+                <h4>💰 PPC Intelligence Strategy</h4>
+                <ul>
+                    <li><strong>Validated Keywords:</strong> If competitors consistently bid on keywords, they're likely profitable</li>
+                    <li><strong>Historical Campaigns:</strong> See when competitors start seasonal campaigns for optimal timing</li>
+                    <li><strong>Ad Copy Testing:</strong> Analyze competitor ad variations to identify winning messages</li>
+                    <li><strong>Budget Insights:</strong> Understand which keywords competitors prioritize with higher spending</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Case Studies Section -->
+        <div class="content-section" id="case-studies">
+            <h2>📚 Real-World SpyFu Success Stories</h2>
+            
+            <div class="case-study">
+                <h3>🏆 Case Study 1: Phoenix HVAC Company Transformation</h3>
+                <p><strong>Challenge:</strong> Mid-sized HVAC contractor needed to compete against national chains and established local competitors for online visibility.</p>
+                
+                <div class="before-after">
+                    <div class="before">
+                        <h4>🔴 Starting Point</h4>
+                        <ul>
+                            <li>150 organic keywords ranking</li>
+                            <li>12 first-page rankings</li>
+                            <li>Minimal organic traffic</li>
+                            <li>High dependency on paid ads</li>
+                        </ul>
+                    </div>
+                    <div class="after">
+                        <h4>🟢 After 6 Months</h4>
+                        <ul>
+                            <li>640 organic keywords ranking</li>
+                            <li>89 first-page rankings</li>
+                            <li>340% organic traffic increase</li>
+                            <li>45% reduction in cost per lead</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="tip-box">
+                    <h4>🎯 Key SpyFu Strategies Used</h4>
+                    <ul>
+                        <li><strong>Kombat Analysis:</strong> Identified 47 keywords ranking positions 11-16 for quick wins</li>
+                        <li><strong>Competitor Intelligence:</strong> Discovered 150+ competitor keywords to target</li>
+                        <li><strong>Historical Data:</strong> Used seasonal patterns to plan content calendar</li>
+                        <li><strong>Backlink Analysis:</strong> Found 23 high-authority local link opportunities</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="case-study">
+                <h3>🏆 Case Study 2: E-commerce Recovery After Algorithm Update</h3>
+                <p><strong>Challenge:</strong> Online retailer lost 65% of organic traffic after Google algorithm update and needed strategic recovery plan.</p>
+                
+                <div class="before-after">
+                    <div class="before">
+                        <h4>🔴 Post-Update Impact</h4>
+                        <ul>
+                            <li>65% organic traffic loss</li>
+                            <li>Revenue down 40%</li>
+                            <li>Many keywords lost rankings</li>
+                            <li>Unclear recovery strategy</li>
+                        </ul>
+                    </div>
+                    <div class="after">
+                        <h4>🟢 Recovery Results</h4>
+                        <ul>
+                            <li>Traffic restored to 110% of pre-update levels</li>
+                            <li>Revenue increased 25% above previous high</li>
+                            <li>Diversified keyword portfolio</li>
+                            <li>Stronger competitive position</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="interactive-demo">
+                <h3>🎮 Case Study Analysis Workshop</h3>
+                <button class="demo-button" onclick="analyzeCaseStudy()">📊 Analyze Success Factors</button>
+                <button class="demo-button" onclick="startStrategyBuilder()">🎯 Build Your Strategy</button>
+                <button class="demo-button" onclick="showImplementationGuide()">📋 Implementation Guide</button>
+                
+                <div id="case-study-analysis" style="display: none;">
+                    <h4>🎯 Success Factor Analysis</h4>
+                    <div class="checklist">
+                        <div class="checklist-item">
+                            <div class="checkbox checked"></div>
+                            <span><strong>Systematic Competitor Analysis:</strong> Used SpyFu to identify all competitor strategies</span>
+                        </div>
+                        <div class="checklist-item">
+                            <div class="checkbox checked"></div>
+                            <span><strong>Historical Data Intelligence:</strong> Leveraged 18+ years of data for trend prediction</span>
+                        </div>
+                        <div class="checklist-item">
+                            <div class="checkbox checked"></div>
+                            <span><strong>Quick Win Prioritization:</strong> Focused on positions 11-16 for immediate results</span>
+                        </div>
+                        <div class="checklist-item">
+                            <div class="checkbox checked"></div>
+                            <span><strong>Comprehensive Keyword Strategy:</strong> Expanded from 150 to 640+ targeted keywords</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tip-box">
+                <h4>🚀 Replicable Success Framework</h4>
+                <p>Both case studies demonstrate the power of SpyFu's comprehensive competitive intelligence. The key to success lies in systematic implementation of competitor insights, historical data analysis, and strategic prioritization of opportunities based on SpyFu's unique metrics.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Navigation functionality
+        function showSection(sectionId) {
+            // Hide all sections
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Remove active class from all tabs
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected section
+            document.getElementById(sectionId).classList.add('active');
+            
+            // Add active class to corresponding tab
+            document.querySelector(`[data-section="${sectionId}"]`).classList.add('active');
+        }
+
+        // Tab navigation
+        document.querySelectorAll('.nav-tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                const sectionId = this.dataset.section;
+                showSection(sectionId);
+            });
+        });
+
+        // Step completion
+        function completeStep(stepElement) {
+            stepElement.classList.add('completed');
+            
+            // Update progress
+            const steps = stepElement.parentElement.querySelectorAll('.step');
+            const completedSteps = stepElement.parentElement.querySelectorAll('.step.completed');
+            const progressPercent = (completedSteps.length / steps.length) * 100;
+            
+            // Update progress bar if it exists
+            const progressBar = document.querySelector('.progress-fill');
+            if (progressBar) {
+                progressBar.style.width = Math.max(progressPercent, 10) + '%';
+            }
+        }
+
+        // Checkbox functionality
+        function toggleCheckbox(item) {
+            const checkbox = item.querySelector('.checkbox');
+            checkbox.classList.toggle('checked');
+        }
+
+        // Workflow step toggle
+        function toggleWorkflowStep(step) {
+            step.classList.toggle('completed');
+        }
+
+        // Navigation simulator
+        function highlightNavItem(item, section) {
+            // Remove active class from all items
+            document.querySelectorAll('.simulator-nav-item').forEach(navItem => {
+                navItem.classList.remove('active');
+            });
+            
+            // Add active class to clicked item
+            item.classList.add('active');
+            
+            // Update content based on section
+            const contentArea = document.getElementById('nav-content');
+            const sectionContent = {
+                'dashboard': {
+                    title: 'Dashboard',
+                    description: 'Your SpyFu command center with quick access to all competitive intelligence tools'
+                },
+                'keyword-research': {
+                    title: 'Keyword Research',
+                    description: 'Discover and analyze keywords with difficulty scoring and competitive intelligence'
+                },
+                'seo-research': {
+                    title: 'SEO Research',
+                    description: 'Comprehensive SEO analysis including Kombat tool and ranking history'
+                },
+                'ppc-research': {
+                    title: 'PPC Research',
+                    description: 'Competitor PPC intelligence including ad history and keyword bidding data'
+                },
+                'projects': {
+                    title: 'Projects',
+                    description: 'Organize and track your competitive intelligence campaigns'
+                },
+                'reports': {
+                    title: 'Reports',
+                    description: 'Generate white-label reports and track performance metrics'
+                }
+            };
+            
+            const content = sectionContent[section];
+            contentArea.innerHTML = `
+                <div class="metric-box">
+                    <div class="metric-value">${content.title}</div>
+                    <div class="metric-label">${content.description}</div>
+                </div>
+            `;
+        }
+
+        // Kombat Analysis
+        function runKombatAnalysis() {
+            const yourDomain = document.getElementById('your-domain-kombat').value;
+            const competitor1 = document.getElementById('competitor1-kombat').value;
+            const competitor2 = document.getElementById('competitor2-kombat').value;
+            
+            if (!yourDomain || !competitor1 || !competitor2) {
+                alert('Please enter all three domains for Kombat analysis');
+                return;
+            }
+            
+            document.getElementById('kombat-results').style.display = 'block';
+        }
+
+        function showKeywordSegment(segment) {
+            const messages = {
+                'your-unique': 'Your Unique Keywords: These are keywords only you rank for. Consider if competitors should be targeting these too.',
+                'shared': 'Shared Keywords: These are competitive battlegrounds where all players fight for rankings.',
+                'competitor-unique': 'Competitor Keywords: These are your biggest opportunities - keywords competitors rank for but you don\'t!'
+            };
+            
+            alert(messages[segment]);
+        }
+
+        function explainKombatSegments() {
+            document.getElementById('kombat-explanation').style.display = 'block';
+        }
+
+        function showKombatTips() {
+            alert('SpyFu Kombat Pro Tips:\n\n✓ Focus on "Consider Buying" segment for validated opportunities\n✓ Multiple competitors targeting same keywords = market validation\n✓ Use historical data to see when competitors started targeting keywords\n✓ Look for seasonal patterns in competitor targeting');
+        }
+
+        function startKombatChallenge() {
+            alert('🏆 Kombat Challenge Started!\n\nTask: Use the Kombat tool to find 10 high-value keywords that 2+ competitors target but you don\'t.\n\nSuccess Criteria:\n- Keywords with search volume >1,000\n- Difficulty score <50\n- Commercial intent indicators\n\nTime limit: 30 minutes');
+        }
+
+        // Keyword Research
+        function analyzeKeywordDifficulty() {
+            const keyword = document.getElementById('keyword-difficulty-input').value;
+            if (!keyword) {
+                alert('Please enter a keyword to analyze');
+                return;
+            }
+            
+            document.getElementById('keyword-difficulty-results').style.display = 'block';
+            
+            // Simulate realistic data
+            setTimeout(() => {
+                const difficulty = Math.floor(Math.random() * 100) + 1;
+                const volume = Math.floor(Math.random() * 20000) + 1000;
+                const competition = difficulty < 30 ? 'Low' : difficulty < 60 ? 'Medium' : 'High';
+                const opportunity = difficulty < 40 && volume > 2000 ? 'High' : difficulty < 60 ? 'Medium' : 'Low';
+                
+                document.getElementById('difficulty-score').textContent = difficulty;
+                document.getElementById('search-volume-kw').textContent = volume.toLocaleString();
+                document.getElementById('competition-level').textContent = competition;
+                document.getElementById('opportunity-score').textContent = opportunity;
+            }, 500);
+        }
+
+        // Competitor Analysis
+        function runCompetitorAnalysis() {
+            const competitor = document.getElementById('competitor-analysis-input').value;
+            if (!competitor) {
+                alert('Please enter a competitor domain');
+                return;
+            }
+            
+            document.getElementById('competitor-analysis-results').style.display = 'block';
+        }
+
+        // Historical Data
+        function showSeasonalTrends() {
+            document.getElementById('historical-insights').style.display = 'block';
+        }
+
+        function showCompetitorEvolution() {
+            alert('📊 Competitor Evolution Analysis:\n\n✓ Track ranking changes over 18+ years\n✓ Identify strategy shifts and pivots\n✓ See when competitors entered/exited markets\n✓ Understand long-term competitive patterns\n✓ Predict future strategy changes');
+        }
+
+        function showKeywordLifecycle() {
+            alert('📈 Keyword Lifecycle Analysis:\n\n📍 Emergence: Low volume, minimal competition\n📈 Growth: Rising volume, increasing competition\n🎯 Maturity: Peak volume, high competition\n📉 Decline: Decreasing volume, competitor exit\n\nUse SpyFu\'s historical data to identify where keywords are in their lifecycle!');
+        }
+
+        // Backlink Analysis
+        function analyzeBacklinks() {
+            const domain = document.getElementById('backlink-analysis-input').value;
+            if (!domain) {
+                alert('Please enter a domain for backlink analysis');
+                return;
+            }
+            
+            document.getElementById('backlink-analysis-results').style.display = 'block';
+        }
+
+        // PPC Analysis
+        function analyzePPCStrategy() {
+            const domain = document.getElementById('ppc-analysis-input').value;
+            if (!domain) {
+                alert('Please enter a domain for PPC analysis');
+                return;
+            }
+            
+            document.getElementById('ppc-analysis-results').style.display = 'block';
+        }
+
+        // Case Study Analysis
+        function analyzeCaseStudy() {
+            document.getElementById('case-study-analysis').style.display = 'block';
+        }
+
+        function startStrategyBuilder() {
+            alert('🎯 Strategy Builder Activated!\n\nBased on the Phoenix HVAC case study, here\'s your strategic framework:\n\n1. Run Kombat analysis to identify competitor keywords\n2. Focus on positions 11-16 for quick wins\n3. Use historical data for seasonal planning\n4. Target competitor backlink sources\n5. Monitor and adjust monthly\n\nReady to build your custom strategy?');
+        }
+
+        function showImplementationGuide() {
+            alert('📋 SpyFu Implementation Guide:\n\n✅ Week 1: Setup and competitor identification\n✅ Week 2: Kombat analysis and keyword gaps\n✅ Week 3: Content optimization for quick wins\n✅ Week 4: Backlink outreach campaign\n✅ Month 2: Scale successful strategies\n✅ Month 3: Analyze results and optimize\n\nConsistent execution is key to SpyFu success!');
+        }
+
+        // Initialize with welcome message
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🕵️ Welcome to SpyFu Mastery Dashboard! Ready to outsmart your competition?');
+        });
+    </script>
+</body>
+</html>
